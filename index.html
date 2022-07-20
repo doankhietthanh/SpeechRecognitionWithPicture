@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet" href="./css/styles.css" />
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="loading-container">
+        <div class="lds-roller">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="left-container">
+            <div class="voice-container" class="btn-start">
+                <div class="voice-animation" id="voice-animation">
+                    <div class="voice-box">
+                        <span class="blue"></span>
+                        <span class="red"></span>
+                        <span class="yellow"></span>
+                        <span class="green"></span>
+                    </div>
+                </div>
+
+                <span class="material-symbols-rounded" id="voice-icon">
+                    mic_off
+                </span>
+            </div>
+
+            <div class="upload-container">
+                <form id="upload-image-form">
+                    <input type="file" name="file" id="choose-file" />
+                    <P>Drag your files here or click in this area.</P>
+                    <div class="image-uploaded">
+                        <img src="" id="image-uploaded" />
+                    </div>
+                    <div class="save-box">
+                        <label for="file">
+                            <span class="material-symbols-rounded">
+                                edit_note
+                            </span>
+                        </label>
+                        <input type="text" name="keyword" id="keyword" required />
+                        <button type="submit" value="Upload" class="btn-upload">
+                            <span class="material-symbols-rounded">
+                                file_upload
+                            </span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="gallery-container">
+            <div class="search-container">
+                <form id="search-form">
+                    <input type="text" class="searchTerm" id="search" placeholder="What are you looking for?">
+                    <button type="submit" class="btn-search">
+                        <span class="material-symbols-rounded">
+                            search
+                        </span>
+                    </button>
+                </form>
+            </div>
+            <div class="gallery" id="gallery">
+                .<div class="gallery-item full" style="grid-row-end: span 23;">
+                    <!-- s -->
+                    <!-- <div class="expand">
+                        <div class="btn-close-expand">
+                            <span class="material-symbols-rounded">
+                                close
+                            </span>
+                        </div>
+
+                        <div class="properties">
+                            <div class="properties-name">
+                                <h3>
+                                    KHOADIEN
+                                </h3>
+                            </div>
+                            <div class="properties-keyword">
+                                <label>Keyword</label>
+                                <textarea></textarea>
+                            </div>
+                            <div class="properties-description">
+                                <label>Date</label>
+                                <textarea></textarea>
+                            </div>
+                            <div class="btn-save-properties">
+                                <span class="material-symbols-rounded">
+                                    save
+                                </span>
+                            </div>
+                        </div>
+                        <div class="btn-delete-properties">
+                            <span class="material-symbols-rounded">
+                                delete
+                            </span>
+                        </div>
+                    </div> -->
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+<script type="module" src="./js/firebase.js"></script>
+<script type="module" src="./js/main.js"></script>
+<script type="module" src="./js/gallery.js"></script>
+<script type="module" src="./js/voice-animation.js"></script>
+
+
+
+</html>
