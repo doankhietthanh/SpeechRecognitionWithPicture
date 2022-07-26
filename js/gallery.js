@@ -1,4 +1,4 @@
-let gallery = document.querySelector("#gallery");
+let galleryCharacters = document.querySelectorAll(".gallery-character");
 
 var getVal = function (elem, style) {
   return parseInt(window.getComputedStyle(elem).getPropertyValue(style));
@@ -8,15 +8,17 @@ var getHeight = function (item) {
 };
 
 export var resizeAll = function () {
-  var altura = getVal(gallery, "grid-auto-rows");
-  var gap = getVal(gallery, "grid-row-gap");
-  gallery.querySelectorAll(".gallery-item").forEach(function (item) {
-    var el = item;
-    el.style.gridRowEnd =
-      "span " + Math.ceil((getHeight(item) + gap) / (altura + gap));
-  });
+  galleryCharacters.forEach((gallery) => {
+    var altura = getVal(gallery, "grid-auto-rows");
+    var gap = getVal(gallery, "grid-row-gap");
+    gallery.querySelectorAll(".gallery-item").forEach(function (item) {
+      var el = item;
+      el.style.gridRowEnd =
+        "span " + Math.ceil((getHeight(item) + gap) / (altura + gap));
+    });
 
-  gallery.style.animation = "fadeIn 0.5s";
+    gallery.style.animation = "fadeIn 0.5s";
+  });
 };
 
 // setTimeout(() => {

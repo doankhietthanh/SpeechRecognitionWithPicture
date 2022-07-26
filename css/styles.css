@@ -1,3 +1,7 @@
+:root {
+    --color-black: #000;
+    --color-white: #fff;
+}
 * {
     margin: 0px;
     padding: 0px;
@@ -31,7 +35,7 @@ body {
 }
 
 .left-container {
-    width: 30%;
+    width: 20%;
     height: 100vh;
     padding: 15px;
     display: flex;
@@ -61,10 +65,12 @@ body {
 }
 
 .gallery-container {
-    width: 70%;
+    width: 80%;
     height: 100px;
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
     gap: 20px;
     position: absolute;
     top: 0;
@@ -105,27 +111,27 @@ body {
 .searchTerm,
 #keyword {
     width: 100%;
-    border: 3px solid #00b4cc;
+    border: 3px solid #000;
     border-right: none;
     padding: 5px;
     height: 100%;
     border-radius: 5px 0 0 5px;
     outline: none;
     color: #9dbfaf;
-    font-size: 30px;
+    font-size: 20px;
 }
 
 .searchTerm:focus,
 #keyword:focus {
-    color: #00b4cc;
+    color: #000;
 }
 
 .btn-search,
 .btn-upload {
     width: 100px;
     height: 100%;
-    border: 1px solid #00b4cc;
-    background: #00b4cc;
+    border: 1px solid #000;
+    background: #000;
     text-align: center;
     color: #fff;
     border-radius: 0 5px 5px 0;
@@ -165,6 +171,7 @@ body {
 }
 .full .content img {
     width: auto;
+    height: 100%;
     left: 50%;
     transform: translate3d(0, 0, 0);
     /* animation: zoomin 1s ease; */
@@ -187,12 +194,32 @@ body {
 }
 
 .gallery {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.gallery .gallery-character > h3 {
+    width: 100%;
+    padding: 20px 10px 10px 20px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #000;
+    margin-top: 20px;
+    text-transform: uppercase;
+}
+
+.gallery .gallery-item-list {
+    width: 100%;
+    /* height: 100%; */
     display: grid;
     grid-column-gap: 8px;
     grid-row-gap: 8px;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    grid-auto-rows: 8px;
+    grid-auto-rows: 100%;
 }
+
 .gallery img {
     width: 100%;
     max-width: 100%;
@@ -206,9 +233,13 @@ body {
 }
 
 .gallery .content {
+    width: 100%;
+    /* height: auto; */
     padding: 4px;
 }
 .gallery .gallery-item {
+    width: 100%;
+    /* height: auto; */
     transition: grid-row-start 300ms linear;
     transition: transform 300ms ease;
     transition: all 0.5s ease;
@@ -255,7 +286,7 @@ body {
 }
 
 .btn-save-properties {
-    background-color: #00b4cc;
+    background-color: #000;
 }
 .btn-close-expand {
     background-color: #fff;
@@ -299,7 +330,7 @@ body {
     border: none;
     padding: 10px 20px;
     font-size: 18px;
-    /* height: 150px; */
+    height: 150px;
 }
 
 /* form upload */
@@ -308,7 +339,7 @@ body {
     position: relative;
     width: 100%;
     height: 200px;
-    border: 4px dashed #00b4cc;
+    border: 4px dashed #000;
     border-radius: 5px;
     z-index: 0;
 }
@@ -368,8 +399,8 @@ body {
 .save-box label {
     width: 80px;
     height: 100%;
-    border: 1px solid #00b4cc;
-    background: #00b4cc;
+    border: 1px solid #000;
+    background: #000;
     text-align: center;
     color: #fff;
     border-radius: 5px 0px 0px 5px;
@@ -407,7 +438,7 @@ body {
 #upload-image-form button {
     margin: 0;
     color: #222;
-    background: #00b4cc;
+    background: #000;
     border: none;
     width: 30%;
     height: 100%;

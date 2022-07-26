@@ -6,6 +6,7 @@ import {
   uploadBytesResumable,
   listAll,
   getDownloadURL,
+  deleteObject,
 } from "https://www.gstatic.com/firebasejs/9.9.0/firebase-storage.js";
 
 import {
@@ -47,6 +48,7 @@ export {
   uploadBytesResumable,
   listAll,
   getDownloadURL,
+  deleteObject,
   onValue,
   update,
   remove,

@@ -36,10 +36,13 @@ export const voiceAnimationSleazy = () => {
 };
 
 export const voiceAnimationUndulating = () => {
-  document.querySelector(".blue").style.animation = "sound-1 1.4s";
-  document.querySelector(".red").style.animation = "sound-2 1.4s 0.25s";
-  document.querySelector(".yellow").style.animation = "sound-1 1.4s 0.10s";
-  document.querySelector(".green").style.animation = "sound-2 1.4s 0.15s";
+  document.querySelector(".blue").style.animation = "sound-1 1.4s infinite";
+  document.querySelector(".red").style.animation =
+    "sound-2 1.4s 0.25s infinite";
+  document.querySelector(".yellow").style.animation =
+    "sound-1 1.4s 0.10s infinite";
+  document.querySelector(".green").style.animation =
+    "sound-2 1.4s 0.15s infinite";
 };
 
 export const voiceAnimationRipple = () => {

@@ -1,6 +1,7 @@
 import {
   database,
   getDownloadURL,
+  deleteObject,
   onValue,
   ref,
   refdb,
@@ -100,11 +101,17 @@ const uploadImageToFirebase = (folder, file, keyword) => {
       // Upload completed successfully, now we can get the download URL
       getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
         console.log("File available at", downloadURL);
-        set(refdb(database, "images/" + file.name.replace(".", "_")), {
-          name: file.name,
-          keyword: keyword,
-          url: downloadURL,
-        }).then(() => {
+        set(
+          refdb(
+            database,
+            "images/" + removeAccents(file.name.replace(".", "_"))
+          ),
+          {
+            name: file.name,
+            keyword: keyword,
+            url: downloadURL,
+          }
+        ).then(() => {
           loadingContainer.style.display = "none";
         });
       });
@@ -139,14 +146,14 @@ const galleryItemCreated = (name, url, keyword, description) => {
 
   const propertiesKeyword = document.createElement("div");
   propertiesKeyword.classList.add("properties-keyword");
-  propertiesKeyword.innerHTML = `<label>Keyword</label>`;
+  propertiesKeyword.innerHTML = `<label>Từ khóa</label>`;
 
   const propertiesKeywordTextarea = document.createElement("textarea");
   propertiesKeywordTextarea.textContent = keyword;
 
   const propertiesDescription = document.createElement("div");
   propertiesDescription.classList.add("properties-description");
-  propertiesDescription.innerHTML = `<label>Description</label>`;
+  propertiesDescription.innerHTML = `<label>Mô tả</label>`;
 
   const propertiesDescriptionTextarea = document.createElement("textarea");
   propertiesDescriptionTextarea.textContent = description;
@@ -159,9 +166,9 @@ const galleryItemCreated = (name, url, keyword, description) => {
   btnDeleteProperties.classList.add("btn-delete-properties");
   btnDeleteProperties.innerHTML = `<span class="material-symbols-rounded">delete</span>`;
 
+  gallery.appendChild(galleryItem);
   content.appendChild(img);
   galleryItem.appendChild(content);
-  gallery.appendChild(galleryItem);
   galleryItem.appendChild(expand);
   expand.appendChild(properties);
   expand.appendChild(btnCloseExpand);
@@ -193,17 +200,47 @@ const galleryItemCreated = (name, url, keyword, description) => {
 
   btnDeleteProperties.addEventListener("click", () => {
     loadingContainer.style.display = "flex";
-    remove(refdb(database, "images/" + name.replace(".", "_"))).then(() => {
+    remove(
+      refdb(database, "images/" + removeAccents(name.replace(".", "_")))
+    ).then(() => {
       setTimeout(() => {
         loadingContainer.style.display = "none";
       }, 2000);
     });
+    deleteObject(ref(storage, "images/" + name));
   });
 
   img.addEventListener("click", () => {
     galleryItem.classList.add("full");
     expand.style.display = "flex";
   });
+
+  return galleryItem;
+};
+
+const galleryCharacterCreated = (character, listItem) => {
+  const galleryCharacter = document.createElement("div");
+  galleryCharacter.classList.add("gallery-character");
+
+  const h3 = document.createElement("h3");
+  h3.textContent = character;
+
+  const galleryItemList = document.createElement("div");
+  galleryItemList.classList.add("gallery-item-list");
+
+  listItem.forEach((item) => {
+    const galleryItem = galleryItemCreated(
+      item.name,
+      item.url,
+      item.keyword,
+      item.description
+    );
+    galleryItemList.appendChild(galleryItem);
+  });
+
+  gallery.appendChild(galleryCharacter);
+  galleryCharacter.appendChild(h3);
+  galleryCharacter.appendChild(galleryItemList);
 };
 
 onValue(refdb(database, "images"), (snapshot) => {
@@ -211,21 +248,48 @@ onValue(refdb(database, "images"), (snapshot) => {
 
   const data = snapshot.val();
   if (!data) {
+    loadingContainer.style.display = "none";
     return;
   }
   const fileNames = Object.keys(data);
   const fileValues = Object.values(data);
 
+  let docsGalleryCharacter = {};
+
   gallery.innerHTML = "";
   fileNames.forEach((file, index) => {
-    galleryItemCreated(
-      file,
-      fileValues[index].url,
-      fileValues[index].keyword ? fileValues[index].keyword : "",
-      fileValues[index].description ? fileValues[index].description : ""
-    );
+    const character = file.slice(0, 1).toLowerCase();
+    console.log(character, file);
+    if (docsGalleryCharacter[character] !== undefined) {
+      docsGalleryCharacter[character][file] = {
+        name: fileValues[index].name,
+        url: fileValues[index].url,
+        keyword: fileValues[index].keyword,
+        description: fileValues[index].description,
+      };
+    } else {
+      docsGalleryCharacter[character] = {
+        [file]: {
+          name: fileValues[index].name,
+          url: fileValues[index].url,
+          keyword: fileValues[index].keyword,
+          description: fileValues[index].description,
+        },
+      };
+    }
 
     if (index === fileNames.length - 1) {
+      console.log(1, Object.keys(docsGalleryCharacter));
+      const listCharacter = Object.keys(docsGalleryCharacter);
+      console.log(2, listCharacter);
+
+      listCharacter.forEach((character) => {
+        galleryCharacterCreated(
+          character,
+          Object.values(docsGalleryCharacter[character])
+        );
+      });
+
       setTimeout(() => {
         resizeAll();
         loadingContainer.style.display = "none";
@@ -243,6 +307,12 @@ const searchByKey = (keyword) => {
 
     const fileNames = Object.keys(data);
     const fileValues = Object.values(data);
+    const keywordUpToLowerCase = removeAccents(
+      keyword.toLowerCase().split(".")[0]
+    );
+    let searchTemp = false;
+
+    let docsGalleryCharacter = {};
 
     gallery.innerHTML = "";
     fileNames.forEach((file, index) => {
@@ -250,32 +320,58 @@ const searchByKey = (keyword) => {
         fileValues[index].keyword.toLowerCase()
       ).split(",");
 
-      console.log(listKeyword);
-      const keywordUpToLowerCase = removeAccents(
-        keyword.toLowerCase().split(".")[0]
-      );
-
       for (let i = 0; i < listKeyword.length; i++) {
         if (listKeyword[i].trim().includes(keywordUpToLowerCase)) {
-          galleryItemCreated(
-            file,
-            fileValues[index].url,
-            fileValues[index].keyword ? fileValues[index].keyword : "",
-            fileValues[index].description ? fileValues[index].description : ""
-          );
+          const character = file.slice(0, 1).toLowerCase();
+          if (docsGalleryCharacter[character] !== undefined) {
+            docsGalleryCharacter[character][file] = {
+              name: fileValues[index].name,
+              url: fileValues[index].url,
+              keyword: fileValues[index].keyword,
+              description: fileValues[index].description,
+            };
+          } else {
+            docsGalleryCharacter[character] = {
+              [file]: {
+                name: fileValues[index].name,
+                url: fileValues[index].url,
+                keyword: fileValues[index].keyword,
+                description: fileValues[index].description,
+              },
+            };
+          }
+          searchTemp = true;
           resizeAll();
-
           break;
         }
       }
 
       if (index === fileNames.length - 1) {
+        const listCharacter = Object.keys(docsGalleryCharacter);
+        listCharacter.forEach((character) => {
+          galleryCharacterCreated(
+            character,
+            Object.values(docsGalleryCharacter[character])
+          );
+        });
+
         setTimeout(() => {
           resizeAll();
           loadingContainer.style.display = "none";
         }, 2000);
       }
     });
+
+    if (searchTemp === false) {
+      gallery.innerHTML = "";
+      gallery.innerHTML = `<div class="gallery-empty">
+        <h3>Đang tìm kiếm trên Google</h3>
+      </div>`;
+
+      let query = keyword;
+      let url = "http://www.google.com/search?q=" + query + "&tbm=isch";
+      window.open(url, "_blank");
+    }
   });
 };
 
