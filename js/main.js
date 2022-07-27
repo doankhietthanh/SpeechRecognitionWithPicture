@@ -188,7 +188,7 @@ const galleryItemCreated = (name, url, keyword, description) => {
 
   btnSaveProperties.addEventListener("click", () => {
     loadingContainer.style.display = "flex";
-    update(refdb(database, "images/" + name.replace(".", "_")), {
+    update(refdb(database, "images/" + removeAccents(name.replace(".", "_"))), {
       keyword: propertiesKeywordTextarea.value,
       description: propertiesDescriptionTextarea.value,
     }).then(() => {
